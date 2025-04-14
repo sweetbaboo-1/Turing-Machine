@@ -2,7 +2,6 @@
 
 #include <vector>
 
-#include "State.h"
 #include "StateMachine.h"
 
 class TuringMachine
@@ -10,13 +9,15 @@ class TuringMachine
 private:
   std::vector<int> tape;
   StateMachine *stateMachine;
+  int index = 0;
 
 public:
-  int index = 0;
-  State *haltState;
-  State *state0;
-
-  TuringMachine(std::vector<int> tape);
-  void init();
+  TuringMachine(std::vector<int> tape, std::unordered_map<uint32_t, State *> states)
+      : tape(std::move(tape)), stateMachine(new StateMachine(std::move(states))) {}
+  ~TuringMachine() { delete stateMachine; }
+  void init()
+  {
+    stateMachine->init();
+  }
   std::vector<int> runMachine();
 };

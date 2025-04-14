@@ -1,20 +1,24 @@
 #include "StateMachine.h"
-#include "State.h"
+#include <iostream>
 
-void StateMachine::init(State *state)
+void StateMachine::changeState(State* newState)
 {
-  currentState = state;
-  currentState->enter();
-}
-
-void StateMachine::changeState(State *newState)
-{
-  currentState->exit();
   currentState = newState;
-  currentState->enter();
+  std::cout << "Changed to state: " << currentState->stateID << std::endl;
 }
 
-State *StateMachine::getCurrentState()
+void StateMachine::step(bool &read_bit, bool &write_bit, bool &move_right)
 {
-  return currentState;
-}
+  if (read_bit)
+  {
+    write_bit = currentState->writeOnReadOne;
+    move_right = currentState->moveOnReadOne;
+    this->changeState(states[currentState->stateOnReadOne]);
+  }
+  else
+  {
+    write_bit = currentState->writeOnReadZero;
+    move_right = currentState->moveOnReadZero;
+    this->changeState(states[currentState->stateOnReadZero]);
+  }
+};

@@ -1,0 +1,13 @@
+Main idea is to simulate a turing machine. 
+This will be accomplished in a few various steps
+
+step 1: Make a very hard coded state machine.
+  - Each state is a hardcoded state class State0, State1...
+step 2: Make an encoded state machine.
+  - The encoded state machine encodes the state, the instructions, and the next state inside of a data structure
+  - Start with an abstract state object
+  - Each state needs
+    1. An ID
+    2. Instructions for reading a 0 or a 1
+    Instructions are to write a 0 or a 1, move left or right, and the next state to transition to. 
+    

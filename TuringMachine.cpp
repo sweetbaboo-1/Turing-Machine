@@ -1,31 +1,33 @@
 #include "TuringMachine.h"
 #include "StateMachine.h"
-#include "State0.h"
-#include "HaltState.h"
-#include "Action.h"
-
-TuringMachine::TuringMachine(std::vector<int> tape)
-    : tape(tape)
-{
-  stateMachine = new StateMachine();
-}
-
-void TuringMachine::init()
-{
-  // create all states
-  haltState = new HaltState(this, stateMachine);
-  state0 = new State0(this, stateMachine);
-
-  stateMachine->init(state0);
-}
 
 std::vector<int> TuringMachine::runMachine()
 {
-  while (!stateMachine->isHalted)
+  while (true)
   {
-    Action action = stateMachine->getCurrentState()->execute(&tape[index]);
-    tape[index] = action.write;
-    index += static_cast<int>(action.direction);
+    bool readBit = tape[index];
+    bool writeBit, moveBit;
+    stateMachine->step(readBit, writeBit, moveBit);
+
+    tape[index] = writeBit;
+    index += moveBit ? 1 : -1;
+
+    if (stateMachine->getCurrentState()->stateID == 0)
+    {
+      break;
+    }
+
+    // Handle infinite tape growth
+    if (index < 0)
+    {
+      tape.insert(tape.begin(), 0);
+      index = 0;
+    }
+    else if (index >= tape.size())
+    {
+      tape.push_back(0);
+    }
   }
+
   return tape;
 }

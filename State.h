@@ -1,25 +1,15 @@
-#pragma once
+#include <cstdint>
 
-#include <string>
-#include <iostream>
-#include "Action.h"
-
-class StateMachine; // Forward declaration
-class TuringMachine; // Forward declaration
-
-class State
+struct State
 {
-protected:
-  StateMachine *stateMachine;
-  TuringMachine *turingMachine;
-  std::string stateName;
-
-public:
-  State(TuringMachine *turingMachine, StateMachine *stateMachine, std::string stateName);
-
-  virtual void enter();
-  virtual void exit();
-  virtual Action execute(int *tapeValue) = 0;
-
-  virtual ~State();
+  uint32_t stateID;
+  uint32_t stateOnReadZero;
+  uint32_t stateOnReadOne;
+  
+  // true is write 1 or move right
+  // zero is write 0 or move left
+  bool writeOnReadZero;
+  bool writeOnReadOne;
+  bool moveOnReadZero;
+  bool moveOnReadOne;
 };
